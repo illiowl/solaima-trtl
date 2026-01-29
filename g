@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>سلحفاة و آيس كريم الملوخية</title>
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --secondary-color: #10b981;
+      --danger-color: #ef4444;
+      --text-color: #1f2937;
+      --bg-color: #f0f9ff;
+      --card-color: #ffffff;
+    }
+    
+    body {
+      font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
+      background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      color: var(--text-color);
+      background-image: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.1) 0%, rgba(255, 255, 255, 1) 90%);
+    }
+
+    .card {
+      background-color: var(--card-color);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 500px;
+      transition: all 0.3s ease;
+    }
+
+    #message {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      min-height: 80px;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+
+    .buttons-container {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      padding: 0.8rem 1.8rem;
+      margin: 0.5rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #yes {
+      background-color: var(--danger-color);
+      color: white;
+      position: relative;
+    }
+
+    #yes:hover {
+      background-color: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
+    }
+
+    #no {
+      background-color: var(--secondary-color);
+      color: white;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #no:hover {
+      background-color: #059669;
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+    }
+
+    #turtle {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .counter {
+      background-color: rgba(37, 99, 235, 0.1);
+      color: var(--primary-color);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-weight: bold;
+      margin-top: 1rem;
+      display: inline-block;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 1.5rem;
+      }
+      
+      #message {
+        font-size: 1.2rem;
+      }
+      
+      .btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="card">
+    <div id="turtle">🐢</div>
+    <div id="message">السلحفاة: عندك آيس كريم ملوخية؟</div>
+    
+    <div class="buttons-container">
+      <button class="btn" id="yes">نعم</button>
+      <button class="btn" id="no">لا</button>
+    </div>
+    
+    <div id="counter" class="counter">عدد المحاولات: 0</div>
+  </div>
+
+  <audio id="yuckSound" preload="auto">
+    <source src="yuck.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const message = document.getElementById('message');
+    const yesBtn = document.getElementById('yes');
+    const noBtn = document.getElementById('no');
+    const yuckSound = document.getElementById('yuckSound');
+    const container = document.querySelector('.buttons-container');
+    const counter = document.getElementById('counter');
+    const turtle = document.getElementById('turtle');
+
+    let moveCount = 0;
+
+    function getRandomPosition() {
+      const containerWidth = container.offsetWidth - noBtn.offsetWidth;
+      const containerHeight = container.offsetHeight - noBtn.offsetHeight;
+      
+      return {
+        x: Math.random() * containerWidth,
+        y: Math.random() * containerHeight
+      };
+    }
+
+    function moveNoButton() {
+      moveCount++;
+      counter.textContent = `عدد المحاولات: ${moveCount}`;
+      
+      const newPos = getRandomPosition();
+      
+      noBtn.style.left = `${newPos.x}px`;
+      noBtn.style.top = `${newPos.y}px`;
+      
+      // تأثير اهتزاز للسلحفاة
+      turtle.style.transform = 'rotate(5deg)';
+      setTimeout(() => {
+        turtle.style.transform = 'rotate(-5deg)';
+        setTimeout(() => {
+          turtle.style.transform = 'rotate(0)';
+        }, 100);
+      }, 100);
+      
+      message.textContent = `السلحفاة: حاولت تمسكني ${moveCount} مرة!`;
+    }
+
+    yesBtn.addEventListener('click', () => {
+      message.textContent = "يععععع 🤢🤮 مين بيأكل آيس كريم ملوخية؟!";
+      yuckSound.play();
+      
+      // تأثير للزر نعم
+      yesBtn.style.transform = 'scale(0.95)';
+      turtle.style.transform = 'scale(1.1)';
+      
+      setTimeout(() => {
+        yesBtn.style.display = "none";
+        noBtn.style.display = "none";
+        
+        setTimeout(() => {
+          message.textContent = "السلحفاة: خلاص... عرفت إنك مش هتجيب!";
+          turtle.style.transform = 'scale(1) rotate(0)';
+        }, 1000);
+      }, 300);
+    });
+
+    noBtn.addEventListener('mouseenter', moveNoButton);
+    noBtn.addEventListener('click', moveNoButton);
+  </script>
+
+</body>
+</html>
